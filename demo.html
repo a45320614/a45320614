@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="mystyle.css">
+        <title>樂透</title>
+    </head>
+
+    <body>
+        
+        <!--(1)以文字說明遊戲規則-->
+        <p>玩家你好，這是一個樂透遊戲，以下是遊戲規則 :<br>
+            使用者可在網頁上自行輸入 3 個號碼 (範圍是數字1~10)；每次開始遊戲時會亂數產生 3 個得獎號碼 (範圍是數字 1~10 不重複)；當使用者輸入 3 個號碼並按下開獎按鈕後，會開始比對輸入的號碼及得獎號碼 (不管排列先後順序)，全部對中時為頭獎、2 個號碼對中為貳獎、1 個號碼對中為參獎。</p>
+        
+        <!--(1)使用者可在網頁上自行輸入3個號碼(範圍是數字1~10)-->
+        <p>請輸入3個號碼(1~10) :</p>
+        <input type = "number" id = "input1" min = "1" max = "10" style="float:right">
+        <input type = "number" id = "input2" min = "1" max = "10" style="float:middle">
+        <input type = "number" id = "input3" min = "1" max = "10" style="float:left">
+        
+        <!--(1)開獎按鈕-->
+        <button id = "button1" onclick = "checkNumbers()">開獎</button>
+        
+        <!--(4)具備重新開始(reset)功能的按鈕，讓使用者可以進行全新一輪的遊戲-->
+        <button id = "button2" onclick = "reset()">重新開始</button>
+        
+        <div id = "result"></div>
+        <script>
+            
+            //(1)開始遊戲時會亂數產生3個得獎號碼(範圍是1~10不重複)
+            function generateRandomNumbers(){
+                var numbers = [];
+                while(numbers.length < 3){
+                    var randomNumber = Math.floor(Math.random() * 10) + 1;
+                    if (numbers.indexOf(randomNumber) === -1) {
+                        numbers.push(randomNumber);
+                    }
+                }
+                return numbers;
+            }
+            
+            //(1)比對輸入的號碼及得獎號碼(不管排列先後順序)
+            function checkNumbers(){
+                var input1 = parseInt(document.getElementById("input1").value);
+                var input2 = parseInt(document.getElementById("input2").value);
+                var input3 = parseInt(document.getElementById("input3").value);
+                
+                //(5)具備輸入檢查功能
+                if(!!input1&&!!input2&&!!input3&&document.getElementById("input1").value<=10&&document.getElementById("input1").value>=1&&document.getElementById("input2").value<=10&&document.getElementById("input2").value>=1&&document.getElementById("input3").value<=10&&document.getElementById("input3").value>=1){
+                    var lotteryNumbers = generateRandomNumbers();
+                    var result = document.getElementById("result");
+                    result.innerHTML = "得獎號碼:" +lotteryNumbers.join(',  ') + "<br>";
+
+                    var same = 0;
+                    if(lotteryNumbers.indexOf(input1) !== -1){
+                        same++;
+                    }
+                    if(lotteryNumbers.indexOf(input2) !== -1){
+                        same++;
+                    }
+                    if(lotteryNumbers.indexOf(input3) !== -1){
+                        same++;
+                    }
+
+                    //(1)全部對中時為頭獎、2個號碼對中為貳獎、1個號碼對中為參獎
+                    //(2)三個獎項皆設有不同金額的中獎獎金(金額為自訂之正整數)，當使用者按下開獎按鈕後網頁上會顯示中獎或沒中獎的訊息，若有中獎還會額外顯示獎項和獎金金額
+                    if(same == 3){
+                        result.innerHTML += "中獎 : 頭獎! <br>恭喜獲得5000元!";
+                    }
+                    else if(same == 2){
+                        result.innerHTML += "中獎 : 貳獎! <br>恭喜獲得3000元!";
+                    }
+                    else if(same == 1){
+                        result.innerHTML += "中獎 : 參獎! <br>恭喜獲得1000元!";
+                    }
+                    else{
+                        result.innerHTML += "沒有中獎!";
+                    }
+                }
+                
+                //(5)若使用者輸入的內容非有效數值或者重複的數字，按下開獎按鈕後會跳出警告訊息，並觸發重新開始(reset)功能
+                else{
+                    alert("輸入的內容非有效數值或者重複的數字!");
+                    reset();
+                }
+            }
+            
+            //(4)重新開始(reset)功能(重新亂數產生得獎號碼並清空舊訊息)
+            function reset(){
+                generateRandomNumbers();
+                document.getElementById("input1").value = "";
+                document.getElementById("input2").value = "";
+                document.getElementById("input3").value = "";
+                document.getElementById("result").innerHTML = "";
+            }
+        </script>    
+    </body>
+</html>
